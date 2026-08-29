@@ -972,10 +972,10 @@ strength of code existing. The evidence pack is complete and backed up to Drive.
 
 ## 5 · Evidence pack to have open
 
-- `experiments/run_a_001/manifest.json` — seed, config, config hash, dataset revision, tokenizer hash, git commit
-- `experiments/run_a_001/metrics.csv` — every logged step, starting at 8.318
-- `experiments/run_a_001/loss_curve.png` — training and validation on one axis
-- `experiments/run_a_001/samples.txt` — generations at three temperatures, seeds recorded
+- `results/run_a_001/manifest.json` — seed, config, config hash, dataset revision, tokenizer hash, git commit
+- `results/run_a_001/metrics.csv` — every logged step, starting at 8.318
+- `results/run_a_001/loss_curve.png` — training and validation on one axis
+- `results/run_a_001/samples.txt` — generations at three temperatures, seeds recorded
 - `checkpoints/ckpt_A_final.pt` — with file size and modification time visible
 - Terminal scrollback showing the overfit-one-batch test passing
 - A screen recording of the full demo, in case the live run fails
