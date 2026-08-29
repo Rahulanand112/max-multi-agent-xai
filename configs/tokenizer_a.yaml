@@ -1,0 +1,22 @@
+# Tokenizer for Config A (the Review 1 model).
+#
+# 4,096 = 32 reserved special ids + the character alphabet + learned merges.
+# The vocabulary is fitted on the TRAIN SPLIT ONLY.
+
+name: max_bpe_a
+vocab_size: 4096
+
+training:
+  min_char_freq: 5        # characters rarer than this become <|unk|>
+  min_pair_freq: 2        # stop merging when no pair occurs this often
+  # Fitting on the full corpus is slow and unnecessary; a large random sample
+  # of the train split gives an essentially identical merge table.
+  max_train_documents: 200000
+  seed: 1337
+
+paths:
+  out_dir: tokenizer/artifacts/max_bpe_a
+
+# Expected initial loss for a randomly initialised model over this vocabulary.
+# ln(4096) = 8.3178. This is the random-initialisation proof -- see docs.
+expected_init_loss: 8.3178

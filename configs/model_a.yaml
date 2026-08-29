@@ -1,0 +1,39 @@
+# MAX-1M -- Config A. The Review 1 model.
+#
+# Calculated parameter count: 1,331,968
+#   token embedding   4096 x 128                  =   524,288
+#   positional         128 x 128                  =    16,384
+#   4 x transformer block @ 197,760               =   791,040
+#   final layernorm                               =       256
+#   lm head (tied to token embedding)             =         0
+#
+# Deliberately small: it trains in minutes on a T4 and still trains on CPU,
+# which is the Review 1 insurance policy if Colab is unavailable.
+
+name: max-1m
+
+model:
+  vocab_size: 4096
+  d_model: 128
+  n_layers: 4
+  n_heads: 4              # head_dim = 128 / 4 = 32
+  d_ff: 512               # 4 x d_model
+  context_length: 128
+  positional: learned     # learned absolute; Config B upgrades to RoPE
+  norm: pre_ln
+  activation: gelu
+  attn_bias: false
+  ffn_bias: true
+  tie_embeddings: true
+  dropout: 0.0            # not needed at 50M tokens for 1.3M params
+
+init:
+  scheme: normal
+  std: 0.02
+  # residual projections scaled by 1/sqrt(2 * n_layers), the GPT-2 recipe.
+  # Keeps activation variance from growing with depth.
+  scale_residual: true
+
+expected:
+  n_parameters: 1331968
+  init_loss: 8.3178       # ln(4096)

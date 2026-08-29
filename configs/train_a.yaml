@@ -1,0 +1,46 @@
+# Stage 1 pretraining for Config A.
+# PROPOSED values -- nothing here has been measured yet.
+
+_base_: model_a.yaml
+
+run_name: run_a_001
+seed: 1337
+
+data:
+  processed_dir: data/processed
+  tokenizer_dir: tokenizer/artifacts/max_bpe_a
+
+optim:
+  optimizer: adamw
+  lr: 1.0e-3              # probe {5e-4, 1e-3, 3e-3} for 200 steps before committing
+  betas: [0.9, 0.95]
+  eps: 1.0e-8
+  weight_decay: 0.1       # excluded from LayerNorm and embedding parameters
+  grad_clip: 1.0
+
+schedule:
+  type: cosine
+  warmup_fraction: 0.05
+  min_lr_fraction: 0.1    # decay to 10% of peak
+
+train:
+  batch_size: 64          # 64 x 128 = 8,192 tokens per step
+  grad_accum_steps: 1
+  max_steps: 6100         # ~50M tokens
+  precision: fp16         # T4 is Turing -- bf16 is NOT available. GradScaler required.
+  compile: false          # torch.compile costs more than it saves on a short run
+
+eval:
+  every_steps: 250
+  batches: 40             # fixed held-out batches, identical every evaluation
+
+checkpoint:
+  every_steps: 500
+  dir: checkpoints
+  keep_last: 3
+  save_optimizer: true    # required for a resumable run -- non-negotiable on Colab
+
+logging:
+  experiments_dir: experiments
+  log_every_steps: 10
+  tensorboard: true

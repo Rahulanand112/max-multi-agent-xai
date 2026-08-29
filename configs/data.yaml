@@ -1,0 +1,47 @@
+# Corpus preparation for Stage 1 pretraining.
+#
+# Two sources are supported:
+#   tinystories  -- the real corpus. Requires HuggingFace access (Colab/Kaggle).
+#   smoke        -- a ~1 MB public-domain text fetched from GitHub, used to
+#                   exercise the whole pipeline in seconds anywhere. NOT for
+#                   the real run.
+
+source: tinystories          # tinystories | smoke
+
+tinystories:
+  hf_dataset: roneneldan/TinyStories
+  hf_split: train
+  # Number of stories to keep. ~150k stories is roughly the 50M-token target
+  # for Config A. Set to null to use the full 2.12M-story split.
+  max_documents: 150000
+  license: CDLA-Sharing-1.0
+  url: https://huggingface.co/datasets/roneneldan/TinyStories
+
+smoke:
+  url: https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt
+  # the smoke corpus is one long text; split it into pseudo-documents
+  chars_per_document: 1000
+  license: public domain
+  note: pipeline smoke test only -- never use for a reported result
+
+cleaning:
+  unicode_normalise: NFKC     # collapse compatibility characters
+  strip_control_chars: true
+  collapse_blank_lines: true
+  min_chars: 40               # drop stubs that teach nothing
+  max_chars: 8000             # drop pathological outliers
+  dedup: true                 # exact-hash dedup on normalised text
+  drop_marker_chars: true     # remove the tokenizer's whitespace markers if present
+
+split:
+  # Deduplicate BEFORE splitting, so a near-duplicate cannot straddle
+  # train and validation and inflate the score.
+  train: 0.98
+  val: 0.01
+  test: 0.01
+  seed: 1337
+
+paths:
+  raw_dir: data/raw
+  interim_dir: data/interim
+  processed_dir: data/processed

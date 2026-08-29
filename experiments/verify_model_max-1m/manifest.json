@@ -1,0 +1,109 @@
+{
+  "created_utc": "2026-08-25T12:05:19+00:00",
+  "git_commit": "no-git",
+  "hardware": {
+    "platform": "Linux-6.6.122+-x86_64-with-glibc2.35",
+    "python": "3.13.15",
+    "cpu_count": 2,
+    "torch": "2.11.0+cu128",
+    "cuda_available": true,
+    "gpu": "Tesla T4",
+    "gpu_total_mem_gb": 15.64,
+    "gpu_capability": "7.5",
+    "bf16_supported": false
+  },
+  "argv": [
+    "scripts/04_verify_model.py"
+  ],
+  "stage": "model_verification",
+  "model_name": "max-1m",
+  "seed": 1337,
+  "device": "cuda",
+  "config": {
+    "name": "max-1m",
+    "model": {
+      "vocab_size": 4096,
+      "d_model": 128,
+      "n_layers": 4,
+      "n_heads": 4,
+      "d_ff": 512,
+      "context_length": 128,
+      "positional": "learned",
+      "norm": "pre_ln",
+      "activation": "gelu",
+      "attn_bias": false,
+      "ffn_bias": true,
+      "tie_embeddings": true,
+      "dropout": 0.0
+    },
+    "init": {
+      "scheme": "normal",
+      "std": 0.02,
+      "scale_residual": true
+    },
+    "expected": {
+      "n_parameters": 1331968,
+      "init_loss": 8.3178
+    }
+  },
+  "config_hash": "c6a1b0fcd288",
+  "tokenizer_fingerprint": "d6080bac0a9a",
+  "build_seconds": 0.3501,
+  "results": {
+    "n_parameters": 1331968,
+    "n_parameters_expected": 1331968,
+    "weight_statistics": {
+      "embeddings": {
+        "count": 540672,
+        "mean": -2.5692004783195443e-05,
+        "std": 0.020029185339808464,
+        "min": -0.09198909252882004,
+        "max": 0.0972401425242424
+      },
+      "attention": {
+        "count": 196608,
+        "mean": 5.43081114301458e-07,
+        "std": 0.020042501389980316,
+        "min": -0.08883284032344818,
+        "max": 0.0855957567691803
+      },
+      "feedforward": {
+        "count": 264704,
+        "mean": -6.863282760605216e-05,
+        "std": 0.019911449402570724,
+        "min": -0.09045935422182083,
+        "max": 0.09863124787807465
+      },
+      "layernorm": {
+        "count": 2304,
+        "mean": 0.5,
+        "std": 0.500108540058136,
+        "min": 0.0,
+        "max": 1.0
+      },
+      "residual_projections": {
+        "count": 327680,
+        "mean": 3.94899825550965e-06,
+        "std": 0.007073643151670694,
+        "min": -0.03159360960125923,
+        "max": 0.03204292058944702
+      },
+      "ALL": {
+        "count": 1331968,
+        "mean": 0.0008418688667006791,
+        "std": 0.034313466399908066,
+        "min": -0.09198909252882004,
+        "max": 1.0
+      }
+    },
+    "step0_loss": 8.332731,
+    "ln_vocab": 8.317766,
+    "step0_delta": 0.014965,
+    "step0_perplexity": 4157.758,
+    "step0_batch_source": "real corpus (data/processed/train.bin)",
+    "attention_max_abs_diff": 8.344650268554688e-07,
+    "grad_norm": 2.132714
+  },
+  "failures": [],
+  "passed": true
+}

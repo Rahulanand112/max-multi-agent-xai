@@ -1,0 +1,27 @@
+# ---- data: regenerate with scripts/01–03, never committed ----
+data/raw/*
+data/interim/*
+data/processed/*
+!data/**/.gitkeep
+
+# ---- large binaries ----
+*.bin
+*.npy
+
+# ---- checkpoints ----
+# The final Review 1 checkpoint IS committed (see results/) because it is the
+# artefact the milestone is judged on. Intermediate step checkpoints are not.
+checkpoints/ckpt_step_*.pt
+checkpoints/*.tmp
+
+# ---- python ----
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ipynb_checkpoints/
+venv/
+.venv/
+*.egg-info/
+.DS_Store
+.vscode/
+.idea/

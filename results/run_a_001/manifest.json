@@ -1,0 +1,125 @@
+{
+  "created_utc": "2026-08-25T15:30:33+00:00",
+  "git_commit": "no-git",
+  "hardware": {
+    "platform": "Linux-6.6.122+-x86_64-with-glibc2.35",
+    "python": "3.13.15",
+    "cpu_count": 2,
+    "torch": "2.11.0+cu128",
+    "cuda_available": true,
+    "gpu": "Tesla T4",
+    "gpu_total_mem_gb": 15.64,
+    "gpu_capability": "7.5",
+    "bf16_supported": false
+  },
+  "argv": [
+    "scripts/07_train.py",
+    "--checkpoint-dir",
+    "/content/drive/MyDrive/max_v0/checkpoints"
+  ],
+  "stage": "pretraining",
+  "run_name": "run_a_001",
+  "seed": 1337,
+  "device": "cuda",
+  "config": {
+    "name": "max-1m",
+    "model": {
+      "vocab_size": 4096,
+      "d_model": 128,
+      "n_layers": 4,
+      "n_heads": 4,
+      "d_ff": 512,
+      "context_length": 128,
+      "positional": "learned",
+      "norm": "pre_ln",
+      "activation": "gelu",
+      "attn_bias": false,
+      "ffn_bias": true,
+      "tie_embeddings": true,
+      "dropout": 0.0
+    },
+    "init": {
+      "scheme": "normal",
+      "std": 0.02,
+      "scale_residual": true
+    },
+    "expected": {
+      "n_parameters": 1331968,
+      "init_loss": 8.3178
+    },
+    "run_name": "run_a_001",
+    "seed": 1337,
+    "data": {
+      "processed_dir": "data/processed",
+      "tokenizer_dir": "tokenizer/artifacts/max_bpe_a"
+    },
+    "optim": {
+      "optimizer": "adamw",
+      "lr": 0.003,
+      "betas": [
+        0.9,
+        0.95
+      ],
+      "eps": 1e-08,
+      "weight_decay": 0.1,
+      "grad_clip": 1.0
+    },
+    "schedule": {
+      "type": "cosine",
+      "warmup_fraction": 0.05,
+      "min_lr_fraction": 0.1
+    },
+    "train": {
+      "batch_size": 64,
+      "grad_accum_steps": 1,
+      "max_steps": 6100,
+      "precision": "fp16",
+      "compile": false
+    },
+    "eval": {
+      "every_steps": 250,
+      "batches": 40
+    },
+    "checkpoint": {
+      "every_steps": 500,
+      "dir": "checkpoints",
+      "keep_last": 3,
+      "save_optimizer": true
+    },
+    "logging": {
+      "experiments_dir": "experiments",
+      "log_every_steps": 10,
+      "tensorboard": true
+    }
+  },
+  "config_hash": "194119d6b56d",
+  "tokenizer_fingerprint": "d6080bac0a9a",
+  "tokenizer_vocab_size": 4096,
+  "dataset": {
+    "train_tokens": 51601430,
+    "val_tokens": 527038,
+    "processed_dir": "/content/max/data/processed"
+  },
+  "n_parameters": 1331968,
+  "step0_loss": 8.33214,
+  "expected_step0_loss": 8.317766,
+  "parameter_groups": {
+    "decay_tensors": 16,
+    "decay_parameters": 786432,
+    "no_decay_tensors": 28,
+    "no_decay_parameters": 545536
+  },
+  "resumed_from_step": null,
+  "results": {
+    "steps": 6100,
+    "tokens_seen": 49971200,
+    "final_train_loss": 2.194813,
+    "best_val_loss": 2.142597,
+    "elapsed_seconds": 156.1,
+    "tokens_per_second": 320128.0,
+    "val_loss": 2.140691,
+    "val_perplexity": 8.505317,
+    "peak_vram_gb": 0.833
+  },
+  "checkpoint_dir": "/content/drive/MyDrive/max_v0/checkpoints"
+}

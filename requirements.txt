@@ -1,0 +1,33 @@
+# MAX — Multi-Agent Explainable AI with Collaborative Neural Reasoning
+# Python 3.10+
+
+# --- core ---
+torch>=2.0.0
+numpy>=1.24.0
+pyyaml>=6.0
+tqdm>=4.65.0
+
+# --- data ---
+datasets>=2.14.0          # HuggingFace Datasets (download only; no pretrained models)
+requests>=2.31.0
+
+# --- evaluation / plotting ---
+matplotlib>=3.7.0
+pandas>=2.0.0
+scipy>=1.11.0
+
+# --- experiment tracking ---
+tensorboard>=2.14.0
+
+# --- testing ---
+pytest>=7.4.0
+
+# --- later versions (V5+) ---
+# networkx>=3.1
+# plotly>=5.17.0
+# fastapi>=0.104.0
+# uvicorn>=0.24.0
+# streamlit>=1.28.0
+
+# NOTE: transformers is deliberately NOT a dependency.
+# This project never loads pretrained weights. See tests/test_no_pretrained.py

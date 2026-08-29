@@ -1,0 +1,155 @@
+[
+  {
+    "question": "Maya has 4 boxes. Each box holds 6 pens. How many pens does she have?",
+    "final_answer": null,
+    "confidence": 0.0,
+    "method": "M3 multi-agent majority vote (V0 stub)",
+    "agents_run": [
+      "solver",
+      "alternative",
+      "critic",
+      "verifier"
+    ],
+    "conclusions": {
+      "solver": null,
+      "alternative": null,
+      "critic": null,
+      "verifier": null
+    },
+    "supporting": [],
+    "conflicting": [],
+    "disagreement": true,
+    "escalated": false,
+    "verification": {
+      "verdict": null,
+      "evidence": ". Mandy was so excited and asked her mom if she could have some food.  Her mom said yes and they went to the kitchen. Mandy was so excited and asked her mom if ",
+      "compliant": false
+    },
+    "agent_confidences": {
+      "solver": 0.3069,
+      "alternative": 0.0871,
+      "critic": 0.1849,
+      "verifier": 0.4787
+    },
+    "format_compliance": 0.0,
+    "decision_path": [
+      "question",
+      "solver+alternative",
+      "critic",
+      "verifier",
+      "disagree",
+      "majority_vote",
+      "answer"
+    ],
+    "uncertainty": "no agent produced a parseable answer -- expected before Stage 2 reasoning training",
+    "generations": 4,
+    "seeds": {
+      "solver": 1337,
+      "alternative": 1338,
+      "critic": 1339,
+      "verifier": 1340
+    }
+  },
+  {
+    "question": "Tom is taller than Ben. Ben is taller than Sam. Who is tallest?",
+    "final_answer": null,
+    "confidence": 0.0,
+    "method": "M3 multi-agent majority vote (V0 stub)",
+    "agents_run": [
+      "solver",
+      "alternative",
+      "critic",
+      "verifier"
+    ],
+    "conclusions": {
+      "solver": null,
+      "alternative": null,
+      "critic": null,
+      "verifier": null
+    },
+    "supporting": [],
+    "conflicting": [],
+    "disagreement": true,
+    "escalated": false,
+    "verification": {
+      "verdict": null,
+      "evidence": "\". He wants to see the big sign that says \"Hispect\". He wants to see the sign that says \"please\". He says \"please\" and push\". Sam is scared. He does not",
+      "compliant": false
+    },
+    "agent_confidences": {
+      "solver": 0.3571,
+      "alternative": 0.1264,
+      "critic": 0.189,
+      "verifier": 0.3428
+    },
+    "format_compliance": 0.0,
+    "decision_path": [
+      "question",
+      "solver+alternative",
+      "critic",
+      "verifier",
+      "disagree",
+      "majority_vote",
+      "answer"
+    ],
+    "uncertainty": "no agent produced a parseable answer -- expected before Stage 2 reasoning training",
+    "generations": 4,
+    "seeds": {
+      "solver": 1347,
+      "alternative": 1348,
+      "critic": 1349,
+      "verifier": 1350
+    }
+  },
+  {
+    "question": "The cat sat on the mat. Where did the cat sit?",
+    "final_answer": null,
+    "confidence": 0.0,
+    "method": "M3 multi-agent majority vote (V0 stub)",
+    "agents_run": [
+      "solver",
+      "alternative",
+      "critic",
+      "verifier"
+    ],
+    "conclusions": {
+      "solver": null,
+      "alternative": null,
+      "critic": null,
+      "verifier": null
+    },
+    "supporting": [],
+    "conflicting": [],
+    "disagreement": true,
+    "escalated": false,
+    "verification": {
+      "verdict": null,
+      "evidence": ". The cat was happy to see the cat and the cat. The cat and the cat played together all day. The cat was happy to have a new friend.",
+      "compliant": false
+    },
+    "agent_confidences": {
+      "solver": 0.4368,
+      "alternative": 0.0714,
+      "critic": 0.2509,
+      "verifier": 0.4897
+    },
+    "format_compliance": 0.0,
+    "decision_path": [
+      "question",
+      "solver+alternative",
+      "critic",
+      "verifier",
+      "disagree",
+      "majority_vote",
+      "answer"
+    ],
+    "uncertainty": "no agent produced a parseable answer -- expected before Stage 2 reasoning training",
+    "generations": 4,
+    "seeds": {
+      "solver": 1357,
+      "alternative": 1358,
+      "critic": 1359,
+      "verifier": 1360
+    }
+  }
+]

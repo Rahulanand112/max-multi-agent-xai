@@ -1,0 +1,70 @@
+{
+  "created_utc": "2026-08-25T16:00:35+00:00",
+  "git_commit": "no-git",
+  "hardware": {
+    "platform": "Linux-6.6.122+-x86_64-with-glibc2.35",
+    "python": "3.13.15",
+    "cpu_count": 2,
+    "torch": "2.11.0+cu128",
+    "cuda_available": true,
+    "gpu": "Tesla T4",
+    "gpu_total_mem_gb": 15.64,
+    "gpu_capability": "7.5",
+    "bf16_supported": false
+  },
+  "argv": [
+    "scripts/08_evaluate.py",
+    "--checkpoint",
+    "/content/drive/MyDrive/max_v0/checkpoints/ckpt_A_final.pt"
+  ],
+  "stage": "level1_evaluation",
+  "checkpoint": "/content/drive/MyDrive/max_v0/checkpoints/ckpt_A_final.pt",
+  "checkpoint_step": 6100,
+  "tokens_seen": 49971200,
+  "tokenizer_fingerprint": "d6080bac0a9a",
+  "config_hash": "194119d6b56d",
+  "device": "cuda",
+  "precision": "fp16",
+  "n_parameters": 1331968,
+  "measured": {
+    "val_loss": 2.140691,
+    "val_perplexity": 8.5053,
+    "bits_per_token": 3.0884,
+    "next_token_accuracy_at_1": 0.511011,
+    "tokens_evaluated": 327680,
+    "distinct_1": 0.312095,
+    "distinct_2": 0.701622,
+    "repetition_rate": 0.001081,
+    "words": 926
+  },
+  "reproduction": {
+    "expected_val_loss": 2.14069145321846,
+    "expected_source": "checkpoint metrics",
+    "delta": 0.0,
+    "tolerance": 0.02
+  },
+  "generation": {
+    "prompts": [
+      "",
+      "Once upon a time",
+      "The little girl",
+      "Tom and Lily went to the",
+      "One day, a big dog"
+    ],
+    "temperatures": [
+      0.2,
+      0.7,
+      1.0
+    ],
+    "base_seed": 1337,
+    "top_k": 50,
+    "max_new_tokens": 80
+  },
+  "artefacts": {
+    "samples": "/content/max/experiments/run_a_001/samples.txt",
+    "loss_curve": "/content/max/experiments/run_a_001/loss_curve.png"
+  },
+  "elapsed_seconds": 5.78,
+  "failures": [],
+  "passed": true
+}
