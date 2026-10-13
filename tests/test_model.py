@@ -213,9 +213,35 @@ def test_indivisible_head_dimension_is_rejected():
         tiny(d_model=32, n_heads=5)
 
 
-def test_unimplemented_positional_scheme_is_rejected():
-    with pytest.raises(NotImplementedError, match="rope"):
-        tiny(positional="rope")
+def test_unknown_positional_scheme_is_rejected():
+    with pytest.raises(ValueError, match="not supported"):
+        tiny(positional="sinusoidal")
+
+
+def test_rope_model_has_no_positional_parameters():
+    """RoPE must cost zero parameters -- that is the point of choosing it.
+
+    Config A's learned table would have been context_length x d_model. If this
+    ever starts counting parameters, a position embedding has crept back in
+    alongside the rotation and positions are being applied twice.
+    """
+    learned = tiny(positional="learned")
+    rope = tiny(positional="rope")
+    assert rope.pos_emb is None
+    assert rope.rope is not None
+    difference = learned.num_parameters() - rope.num_parameters()
+    assert difference == learned.context_length * learned.d_model
+
+
+def test_rope_model_still_starts_at_ln_vocab():
+    """Changing the positional scheme must not disturb the from-scratch proof."""
+    import math
+    model = tiny(positional="rope")
+    torch.manual_seed(1337)
+    x = torch.randint(0, model.vocab_size, (8, 16))
+    inputs, targets = x[:, :-1], x[:, 1:]
+    _, loss = model(inputs, targets)
+    assert float(loss.detach()) == pytest.approx(math.log(model.vocab_size), abs=0.25)
 
 
 # ---------------------------------------------------------------- generation

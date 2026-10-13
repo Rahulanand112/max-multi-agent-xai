@@ -1,0 +1,59 @@
+# Stage 1 pretraining for Config B (MAX-12M), on a MIXTURE corpus.
+#
+# The mixture is the point. A 12M-parameter model trained only on TinyStories
+# and then asked, in Stage 2, to learn multi-step arithmetic from a few
+# million SFT tokens does not have enough exposure to digits to get there.
+# Mixing the reasoning narratives into pretraining -- as plain prose, with no
+# role tokens -- is cheap and is what makes Stage 2's job tractable.
+#
+# PROPOSED values. The LR here is scaled down from Config A's measured 3e-3
+# because this model is 9x larger; run scripts/06_lr_probe.py --config
+# configs/train_b.yaml before the real run if there is time for it.
+
+_base_: model_b.yaml
+
+run_name: run_b_001
+seed: 1337
+
+data:
+  processed_dir: data/processed
+  tokenizer_dir: tokenizer/artifacts/max_bpe_a
+  # share of each batch drawn from the reasoning narratives rather than
+  # TinyStories. 0.25 means a quarter of pretraining is reasoning text.
+  reasoning_fraction: 0.25
+
+optim:
+  optimizer: adamw
+  lr: 6.0e-4
+  betas: [0.9, 0.95]
+  eps: 1.0e-8
+  weight_decay: 0.1
+  grad_clip: 1.0
+
+schedule:
+  type: cosine
+  warmup_fraction: 0.05
+  min_lr_fraction: 0.1
+
+train:
+  batch_size: 48          # 48 x 256 = 12,288 tokens per step
+  grad_accum_steps: 1
+  max_steps: 8000         # ~98M tokens; roughly 40 min on a free T4
+  precision: fp16         # T4 is Turing -- bf16 unavailable, GradScaler required
+  compile: false
+
+eval:
+  every_steps: 500
+  batches: 30
+
+checkpoint:
+  every_steps: 1000
+  dir: checkpoints
+  keep_last: 2            # 12M params x (weights + 2 AdamW moments) is ~147 MB each
+  save_optimizer: true
+  prefix: ckpt_B          # must differ from Review 1's ckpt_A in a shared folder
+
+logging:
+  experiments_dir: experiments
+  log_every_steps: 25
+  tensorboard: false

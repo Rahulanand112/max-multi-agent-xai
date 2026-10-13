@@ -21,6 +21,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+from .rope import RotaryEmbedding
+
 
 class CausalSelfAttention(nn.Module):
     """Multi-head self-attention with a causal mask.
@@ -38,6 +40,7 @@ class CausalSelfAttention(nn.Module):
         bias: bool = False,
         dropout: float = 0.0,
         use_sdpa: bool = False,
+        rope: "RotaryEmbedding | None" = None,
     ) -> None:
         super().__init__()
         if d_model % n_heads != 0:
@@ -48,6 +51,12 @@ class CausalSelfAttention(nn.Module):
         self.head_dim = d_model // n_heads
         self.dropout = dropout
         self.use_sdpa = use_sdpa
+
+        # Config A: None, and positions come from a learned embedding table
+        # added before block 1. Config B: a RotaryEmbedding, applied to q and k
+        # inside EVERY block. The second is not an addition to the residual
+        # stream at all, which is why the two cannot be mixed.
+        self.rope = rope
 
         # One fused projection producing Q, K and V. Mathematically identical to
         # three separate d_model x d_model matrices -- see split_qkv() -- but a
@@ -86,6 +95,11 @@ class CausalSelfAttention(nn.Module):
             return t.view(batch, seq_len, self.n_heads, self.head_dim).transpose(1, 2)
 
         q, k, v = to_heads(q), to_heads(k), to_heads(v)
+
+        # rotary positions act on q and k only -- never on v, which carries
+        # content rather than position
+        if self.rope is not None:
+            q, k = self.rope(q, k)
 
         attn_weights = None
         if self.use_sdpa and not return_attn:

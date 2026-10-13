@@ -88,7 +88,14 @@ class RoleAgent:
         )
 
         generated_ids = out[0, len(prompt_ids):].tolist()
-        text = self.tokenizer.decode(generated_ids)
+        # skip_special=False is REQUIRED, not a preference. The schema IS the
+        # special tokens: <|answer|>, <|conf|>, <|verdict|>. Decoding with the
+        # default would strip exactly the markers the parser looks for, and
+        # format compliance would read 0% no matter how well the model had
+        # learned the format -- the model emitting them and the parser never
+        # seeing them. This, together with the leading-field bug fixed in
+        # reasoning/schema.parse(), is why the V0 stub reported 0%.
+        text = self.tokenizer.decode(generated_ids, skip_special=False)
         scores = self._score(out, len(prompt_ids))
 
         return AgentOutput(

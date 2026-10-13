@@ -7,11 +7,42 @@ data/processed/*
 # ---- large binaries ----
 *.bin
 *.npy
+*.npz
+
+# ---- cached agent generations ----
+# scripts/14_run_agents.py caches every generation so the evaluation can be
+# re-run without a GPU. Regenerable from the checkpoint, and large.
+experiments/agents/*.pt
+
+# ---- run outputs ----
+# Every run writes experiments/<run>/manifest.json. Those reach the repository
+# through scripts/10_collect_results.py, which copies the ones worth keeping
+# into results/. Committing experiments/ as well would mean two copies that
+# drift apart, and would let a local smoke run masquerade as a result.
+experiments/
+
+# ---- the generated benchmark ----
+# val and test ARE committed: they are what the results are measured on, and a
+# reviewer must be able to check them. train.jsonl is 64 MB and regenerates
+# exactly from seed 1337 in about two minutes, so it is not.
+data/synth/train.jsonl
 
 # ---- checkpoints ----
-# The final Review 1 checkpoint IS committed (see results/) because it is the
-# artefact the milestone is judged on. Intermediate step checkpoints are not.
-checkpoints/ckpt_step_*.pt
+# Nothing under checkpoints/ is committed by default. Two reasons, and the
+# first is the important one:
+#
+#   1. A checkpoint written by a local smoke run looks exactly like one from
+#      the real training run. Committing by default is how a development
+#      artefact ends up presented as the project's model.
+#   2. Config B with optimiser state is ~140 MB, over GitHub's 100 MB limit.
+#      scripts/17_export_weights.py strips the optimiser state to ~49 MB,
+#      which fits; that export is what gets released.
+#
+# Review 1's ckpt_A_final.pt is the single exception, re-allowed below,
+# because it is small and is the artefact that milestone is judged on.
+checkpoints/*
+!checkpoints/.gitkeep
+!checkpoints/ckpt_A_final.pt
 checkpoints/*.tmp
 
 # ---- python ----

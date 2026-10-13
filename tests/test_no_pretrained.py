@@ -91,7 +91,20 @@ def test_transformers_is_not_a_dependency() -> None:
 
 
 def test_no_checkpoint_files_committed() -> None:
-    """A .pt file inside the source tree would be a checkpoint of unknown origin."""
+    """A .pt file inside the source tree would be a checkpoint of unknown origin.
+
+    Three locations are exempt, and the exemptions are narrow on purpose:
+
+      checkpoints/          where this project's own training writes weights
+      data/                 encoded token streams, regenerable by scripts 01-03
+      experiments/agents/   cached AGENT GENERATIONS from scripts/14_run_agents.py
+
+    The third is not weights at all — it is the model's outputs, cached so the
+    evaluation can be re-run without a GPU. It is listed by exact directory so
+    that a stray checkpoint dropped anywhere else in experiments/ still fails
+    this test.
+    """
+    allowed_agent_cache = ROOT / "experiments" / "agents"
     weights = [
         p.relative_to(ROOT)
         for p in ROOT.rglob("*")
@@ -99,5 +112,6 @@ def test_no_checkpoint_files_committed() -> None:
         and p.suffix in {".pt", ".pth", ".bin", ".safetensors", ".ckpt"}
         and "checkpoints" not in p.parts
         and "data" not in p.parts
+        and p.parent != allowed_agent_cache
     ]
     assert not weights, f"unexpected weight files in the source tree: {weights}"

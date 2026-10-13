@@ -1,0 +1,56 @@
+# MAX-12M -- Config B. The main project model: reasoning, agents, fusion.
+#
+# Calculated parameter count: 12,211,200
+#   token embedding   4096 x 384                    =  1,572,864
+#   positional        RoPE, parameter-free          =          0
+#   6 x transformer block @ 1,772,928               = 10,637,568
+#   final layernorm                                 =        768
+#   lm head (tied to token embedding)               =          0
+#
+# Two deliberate departures from the blueprint's Config B, both recorded here
+# rather than quietly applied:
+#
+# 1. VOCABULARY STAYS AT 4,096, not 8,192. The blueprint assumed a refit. We
+#    keep Config A's tokenizer, fingerprint d6080bac0a9a, so every checkpoint
+#    in the project shares one vocabulary and one chain of custody, the 51.6M
+#    already-encoded tokens are reused, and nothing from Review 1 is rebuilt.
+#    The cost is slightly longer sequences on ordinary English; the benefit is
+#    that digits stay close to character-level, which is what multi-step
+#    arithmetic actually wants. Holding the vocabulary fixed is also why the
+#    parameter count lands at 12.2M rather than the blueprint's 13.8M: the
+#    difference is exactly the 4,096 embedding rows we did not add.
+#
+# 2. ln(V) IS UNCHANGED. Because the vocabulary is unchanged, the random-init
+#    proof from Review 1 applies verbatim: step-0 loss must be ln(4096) =
+#    8.3178. The same one-number check guards this model too.
+
+name: max-12m
+
+model:
+  vocab_size: 4096
+  d_model: 384
+  n_layers: 6
+  n_heads: 6              # head_dim = 384 / 6 = 64, even, as RoPE requires
+  d_ff: 1536              # 4 x d_model
+  context_length: 256     # a whole reasoning trace: question + steps + answer
+  positional: rope        # parameter-free, relative, extrapolates past 256
+  norm: pre_ln
+  activation: gelu
+  attn_bias: false
+  ffn_bias: true
+  tie_embeddings: true
+  dropout: 0.0            # raised only if the SFT stage shows a train/val gap
+
+init:
+  scheme: normal
+  std: 0.02
+  scale_residual: true    # 1/sqrt(2L); matters more at 6 layers than at 4
+
+expected:
+  n_parameters: 12211200
+  init_loss: 8.3178       # ln(4096) -- same vocabulary, same proof
+  # Wider tolerance than Config A's 0.05, for a stated reason: at init the
+  # logits are h . E, so their spread grows with d_model. Config A (128) came
+  # in at +0.015; a 384-wide model sits slightly higher. The claim being
+  # tested is unaffected -- a pretrained model of this size starts near 3-4.
+  init_loss_tol: 0.25

@@ -24,6 +24,7 @@ import torch.nn.functional as F
 
 from .block import TransformerBlock
 from .init import expected_init_loss, init_weights
+from .rope import RotaryEmbedding
 
 
 class MAXTransformer(nn.Module):
@@ -45,10 +46,10 @@ class MAXTransformer(nn.Module):
         use_sdpa: bool = False,
     ) -> None:
         super().__init__()
-        if positional != "learned":
-            raise NotImplementedError(
-                f"positional={positional!r} is not implemented yet. "
-                "Config A uses learned absolute positions; RoPE arrives with Config B."
+        if positional not in ("learned", "rope"):
+            raise ValueError(
+                f"positional={positional!r} is not supported. "
+                "Use 'learned' (Config A) or 'rope' (Config B)."
             )
 
         self.vocab_size = vocab_size
@@ -57,9 +58,17 @@ class MAXTransformer(nn.Module):
         self.n_heads = n_heads
         self.context_length = context_length
         self.tie_embeddings = tie_embeddings
+        self.positional = positional
 
         self.tok_emb = nn.Embedding(vocab_size, d_model)
-        self.pos_emb = nn.Embedding(context_length, d_model)
+        # Exactly one of these is live. Learned absolute positions are a
+        # parameter table added once, before block 1; RoPE is a parameter-free
+        # rotation applied to q and k inside every block.
+        self.pos_emb = nn.Embedding(context_length, d_model) if positional == "learned" else None
+        self.rope = (
+            RotaryEmbedding(d_model // n_heads, context_length)
+            if positional == "rope" else None
+        )
         self.drop = nn.Dropout(dropout)
 
         self.blocks = nn.ModuleList([
@@ -72,6 +81,7 @@ class MAXTransformer(nn.Module):
                 ffn_bias=ffn_bias,
                 dropout=dropout,
                 use_sdpa=use_sdpa,
+                rope=self.rope,
             )
             for _ in range(n_layers)
         ])
@@ -105,7 +115,11 @@ class MAXTransformer(nn.Module):
         """(component, parameter count) rows, for the Review 1 table."""
         rows: list[tuple[str, int]] = [
             ("token embedding", self.tok_emb.weight.numel()),
-            ("positional embedding", self.pos_emb.weight.numel()),
+            (
+                "positional embedding"
+                if self.pos_emb is not None else "positional (RoPE, parameter-free)",
+                self.pos_emb.weight.numel() if self.pos_emb is not None else 0,
+            ),
         ]
         per_block = sum(p.numel() for p in self.blocks[0].parameters())
         rows.append((f"transformer block (x1 of {self.n_layers})", per_block))
@@ -136,8 +150,10 @@ class MAXTransformer(nn.Module):
                 f"sequence length {seq_len} exceeds context length {self.context_length}"
             )
 
-        positions = self.position_ids[:, :seq_len]
-        x = self.drop(self.tok_emb(idx) + self.pos_emb(positions))
+        x = self.tok_emb(idx)
+        if self.pos_emb is not None:
+            x = x + self.pos_emb(self.position_ids[:, :seq_len])
+        x = self.drop(x)
 
         for block in self.blocks:
             x = block(x)

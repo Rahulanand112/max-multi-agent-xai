@@ -59,6 +59,7 @@ class TransformerBlock(nn.Module):
         ffn_bias: bool = True,
         dropout: float = 0.0,
         use_sdpa: bool = False,
+        rope=None,
     ) -> None:
         super().__init__()
         self.ln_1 = nn.LayerNorm(d_model)
@@ -69,6 +70,7 @@ class TransformerBlock(nn.Module):
             bias=attn_bias,
             dropout=dropout,
             use_sdpa=use_sdpa,
+            rope=rope,
         )
         self.ln_2 = nn.LayerNorm(d_model)
         self.mlp = FeedForward(d_model, d_ff, bias=ffn_bias, dropout=dropout)

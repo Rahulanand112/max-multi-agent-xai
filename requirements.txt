@@ -22,12 +22,13 @@ tensorboard>=2.14.0
 # --- testing ---
 pytest>=7.4.0
 
-# --- later versions (V5+) ---
-# networkx>=3.1
-# plotly>=5.17.0
-# fastapi>=0.104.0
-# uvicorn>=0.24.0
-# streamlit>=1.28.0
+# --- demo UI ---
+streamlit>=1.28.0         # app/streamlit_app.py; not needed for training or evaluation
+
+# --- not used ---
+# networkx / plotly: the decision graph is emitted as text and Graphviz DOT,
+# so nothing in the evaluation path depends on a drawing library.
+# fastapi / uvicorn: no service is deployed; the demo is the Streamlit app.
 
 # NOTE: transformers is deliberately NOT a dependency.
 # This project never loads pretrained weights. See tests/test_no_pretrained.py

@@ -100,9 +100,57 @@ def test_expected_init_loss_is_ln_vocab() -> None:
 
 
 def test_head_dimension_divides_evenly() -> None:
-    for name in ("model_a.yaml",):
+    for name in ("model_a.yaml", "model_b.yaml"):
         m = load_config(ROOT / "configs" / name).model
         assert m.d_model % m.n_heads == 0
+
+
+def test_config_b_parameter_count_is_exact() -> None:
+    """12,211,200 -- recomputed from the YAML, not copied from a run.
+
+    The arithmetic is spelled out so a reviewer can check it by hand:
+    the only way this passes is if the architecture is what the config says.
+    """
+    cfg = load_config(ROOT / "configs" / "model_b.yaml")
+    m = cfg.model
+    embedding = m.vocab_size * m.d_model
+    positional = 0 if m.positional == "rope" else m.context_length * m.d_model
+    attention = 4 * m.d_model ** 2
+    layernorms = 2 * (2 * m.d_model)
+    feedforward = (m.d_model * m.d_ff + m.d_ff) + (m.d_ff * m.d_model + m.d_model)
+    per_block = attention + layernorms + feedforward
+    total = embedding + positional + m.n_layers * per_block + 2 * m.d_model
+
+    assert per_block == 1_772_928
+    assert total == 12_211_200 == cfg.expected.n_parameters
+
+
+def test_rope_configs_declare_no_positional_table() -> None:
+    """RoPE and a learned table must never both be live; positions would double."""
+    cfg = load_config(ROOT / "configs" / "model_b.yaml")
+    assert cfg.model.positional == "rope"
+    assert cfg.model.d_model % cfg.model.n_heads == 0
+    assert (cfg.model.d_model // cfg.model.n_heads) % 2 == 0, "RoPE needs even head dim"
+
+
+def test_config_b_shares_config_a_vocabulary() -> None:
+    """The deliberate departure from the blueprint, asserted so it stays deliberate.
+
+    One vocabulary across every checkpoint means one tokenizer fingerprint and
+    one chain of custody from Review 1 to the finished system.
+    """
+    a = load_config(ROOT / "configs" / "model_a.yaml").model
+    b = load_config(ROOT / "configs" / "model_b.yaml").model
+    assert a.vocab_size == b.vocab_size == 4096
+
+
+def test_stage_checkpoint_prefixes_are_distinct() -> None:
+    """Shared Drive folder: Stage 1 must not overwrite Review 1 or Stage 2."""
+    prefixes = {
+        name: load_config(ROOT / "configs" / name).checkpoint.get("prefix", "ckpt_A")
+        for name in ("train_a.yaml", "train_b.yaml", "sft_b.yaml")
+    }
+    assert len(set(prefixes.values())) == 3, prefixes
 
 
 def test_seeding_is_reproducible() -> None:

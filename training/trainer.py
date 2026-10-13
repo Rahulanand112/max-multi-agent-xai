@@ -232,7 +232,11 @@ class Trainer:
     # ------------------------------------------------------------ checkpoints
 
     def _checkpoint(self, tag: str | None = None, metrics=None, rotate: bool = True) -> Path:
-        name = f"ckpt_A_{tag}.pt" if tag else f"ckpt_step_{self.step:06d}.pt"
+        # The prefix is per-config so Stage 1 and Stage 2 of Config B cannot
+        # overwrite each other, or Review 1's ckpt_A_final.pt, in a shared
+        # Drive folder. Defaulting to ckpt_A keeps every Review 1 path working.
+        prefix = self.cfg.checkpoint.get("prefix", "ckpt_A")
+        name = f"{prefix}_{tag}.pt" if tag else f"{prefix}_step_{self.step:06d}.pt"
         path = save_checkpoint(
             self.checkpoint_dir / name,
             model=self.model,

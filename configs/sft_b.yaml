@@ -1,0 +1,54 @@
+# Stage 2: reasoning supervised fine-tuning for Config B.
+#
+# Starts from the Stage 1 checkpoint and teaches the five role behaviours.
+# Loss is computed on completion tokens only -- the mask is built by
+# scripts/12_build_sft.py and applied by training/sft_data.py.
+#
+# Lower learning rate and fewer steps than Stage 1, for the usual reason: the
+# model already has the language; this stage is shaping its output format and
+# role behaviour, and a high rate here erases what Stage 1 bought.
+
+_base_: model_b.yaml
+
+run_name: run_b_sft_001
+seed: 1337
+
+data:
+  processed_dir: data/processed
+  tokenizer_dir: tokenizer/artifacts/max_bpe_a
+
+optim:
+  optimizer: adamw
+  lr: 3.0e-4              # one fifth of the Stage 1 peak
+  betas: [0.9, 0.95]
+  eps: 1.0e-8
+  weight_decay: 0.1
+  grad_clip: 1.0
+
+schedule:
+  type: cosine
+  warmup_fraction: 0.03
+  min_lr_fraction: 0.1
+
+train:
+  batch_size: 32          # 32 x 256 = 8,192 tokens per step
+  grad_accum_steps: 1
+  max_steps: 4000         # ~1.4 passes over the packed rows
+  precision: fp16
+  compile: false
+
+eval:
+  every_steps: 250
+  batches: 30
+
+checkpoint:
+  every_steps: 1000
+  dir: checkpoints
+  keep_last: 2
+  save_optimizer: true
+  prefix: ckpt_B_sft
+
+logging:
+  experiments_dir: experiments
+  log_every_steps: 25
+  tensorboard: false
