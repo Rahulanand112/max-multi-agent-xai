@@ -58,7 +58,20 @@ def rng_state() -> dict[str, Any]:
 
 
 def load_rng_state(state: dict[str, Any]) -> None:
-    """Restore RNG states captured by rng_state()."""
+    """Restore RNG states captured by rng_state().
+
+    The .cpu() calls are load-bearing, not defensive tidying. A checkpoint is
+    loaded with map_location="cuda" on a GPU machine, which moves EVERY tensor
+    in the payload to the device -- including the RNG state, which was saved as
+    a CPU ByteTensor. torch.set_rng_state then refuses it with
+
+        TypeError: RNG state must be a torch.ByteTensor
+
+    and the failure only appears on the paths that LOAD a checkpoint, --resume
+    and --init-from. The safety net was therefore broken in a way only
+    discoverable by needing it. Converting back to a CPU uint8 tensor here
+    makes restoring independent of how the caller mapped the checkpoint.
+    """
     if "python" in state:
         random.setstate(state["python"])
     if "numpy" in state:

@@ -104,10 +104,76 @@ than only inspecting it.
 
 ---
 
+## 5 · The resume path was broken, on exactly the run that would need it
+
+```
+TypeError: RNG state must be a torch.ByteTensor
+```
+
+`load_checkpoint(map_location="cuda")` moves every tensor in the payload onto
+the GPU — including the RNG state, which `rng_state()` saved as a CPU
+ByteTensor. `torch.set_rng_state` then refuses it.
+
+This surfaced on a real T4 run, starting Stage 2 from the Stage 1 checkpoint.
+It had never fired before because nothing had yet loaded a checkpoint on a GPU
+machine: Stage 1 trained straight through without being preempted, and every
+earlier test ran on CPU, where `map_location` leaves the tensor alone.
+
+The timing is the point. The only paths that load a checkpoint are `--resume`
+and `--init-from`, and `--resume` exists for when a run has ALREADY been
+interrupted. The safety net was broken in a way that could only be discovered
+by needing it.
+
+**Fix.** Two separate faults, repaired separately:
+
+- `utils/seeding.load_rng_state` converts back to a CPU `uint8` tensor, so
+  restoring is independent of how the caller mapped the checkpoint.
+- `--init-from` passes `restore_rng=False`. A new stage should seed itself from
+  its own config; inheriting the previous stage's generator would make Stage 2's
+  data order depend on exactly where Stage 1 stopped. Only `--resume` restores
+  the stream, because there continuing it is the whole point.
+
+`tests/test_training.py` pins all three behaviours, including one that
+reproduces the device mismatch with a wrong dtype and so needs no GPU.
+
+---
+
+## 6 · Stage 2 memorised its training set, and the curve said so
+
+The first full SFT run reached a training loss of **0.0031** and a validation
+loss of **4.0755**. The trajectory is the finding:
+
+| step | train | validation |
+|---:|---:|---:|
+| 250 | 0.0448 | **1.1663** ← best |
+| 500 | 0.0201 | 1.9246 |
+| 1,000 | 0.0091 | 2.7542 |
+| 4,000 | 0.0031 | 4.0755 |
+
+Validation was already rising at the **first** measurement. By step 250 the
+model had effectively fitted the data; the remaining 3,750 steps did nothing
+but memorise.
+
+The cause was data volume, not method. 12.2M parameters were trained on 7.2M
+supervised tokens drawn from only ten templates, and SFT used 40,000 of the
+106,398 available problems. Training loss near zero on templated data is not a
+success signal — it means the completion became predictable from the prompt,
+which for generated data happens long before the model can do the arithmetic.
+
+This run is kept in `results/run_b_sft_000_overfit/` rather than deleted. It is
+the evidence for the decision that followed: use every problem, add dropout,
+evaluate every 100 steps, and select on validation rather than on the final
+step.
+
+---
+
 ## The common thread
 
-Every one of these was a silent subtraction: a marker stripped, a field not
-credited, a prompt section missing, a key dropped. None produced a traceback and
+Four of these were a silent subtraction: a marker stripped, a field not
+credited, a prompt section missing, a key dropped. The fifth raised loudly but
+hid on a path only reached after something else had already gone wrong. The
+sixth did not look like a bug at all — a training loss of 0.003 looks like
+success until you read it next to the validation curve. None produced a traceback and
 none would have failed a loss curve inspection — the Stage 2 training loss fell
 to 0.03 with bugs 2 and 3 both live.
 

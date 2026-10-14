@@ -168,6 +168,11 @@ def main() -> None:
             source, model=model,
             expected_tokenizer_fingerprint=fingerprint,
             map_location=device,
+            # A NEW STAGE gets a fresh RNG, seeded from this config. Inheriting
+            # the previous stage's generator state would make Stage 2's data
+            # order depend on exactly where Stage 1 happened to stop, which is
+            # the opposite of reproducible. Resume (below) does restore it,
+            # because there the point IS to continue the same stream.
             restore_rng=False,
         )
         init_source = str(source)

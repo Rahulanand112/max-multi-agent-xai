@@ -448,3 +448,48 @@ def test_resume_is_bit_exact(cfg, tmp_path):
     for (name, a), (_, c) in zip(model_a.named_parameters(), model_c.named_parameters()):
         assert torch.equal(a, c), f"{name} drifted after resume"
     assert trainer_a.tokens_seen == trainer_c.tokens_seen
+
+
+# ---------------------------------------------- RNG restore across devices
+
+def test_rng_state_restores_from_a_non_cpu_tensor():
+    """The bug that broke --resume on a GPU machine.
+
+    load_checkpoint(map_location="cuda") moves every tensor in the payload to
+    the device, including the RNG state saved as a CPU ByteTensor.
+    torch.set_rng_state then raises "RNG state must be a torch.ByteTensor".
+    It only ever fires on the paths that load a checkpoint -- the ones you are
+    on precisely when a run has already been interrupted once.
+
+    No GPU is needed to pin it: any wrong dtype reproduces the same refusal.
+    """
+    import torch
+
+    from utils.seeding import load_rng_state, rng_state, set_seed
+
+    set_seed(1337)
+    state = rng_state()
+    state["torch"] = state["torch"].to(torch.int64)   # what map_location does
+
+    load_rng_state(state)                            # must not raise
+    assert torch.get_rng_state().dtype == torch.uint8
+
+
+def test_rng_round_trip_reproduces_the_same_draws():
+    import torch
+
+    from utils.seeding import load_rng_state, rng_state, set_seed
+
+    set_seed(99)
+    state = rng_state()
+    first = torch.randn(4)
+
+    load_rng_state(state)
+    assert torch.equal(torch.randn(4), first)
+
+
+def test_init_from_does_not_inherit_the_previous_stages_rng():
+    """A new stage seeds itself; only --resume continues the old stream."""
+    source = (ROOT / "scripts" / "13_train_b.py").read_text(encoding="utf-8")
+    init_block = source.split("if args.init_from")[1].split("# ---- resume")[0]
+    assert "restore_rng=False" in init_block
