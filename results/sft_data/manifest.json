@@ -1,0 +1,100 @@
+{
+  "created_utc": "2026-10-14T18:10:57+00:00",
+  "git_commit": "29e326a",
+  "hardware": {
+    "platform": "Linux-6.6.122+-x86_64-with-glibc2.39",
+    "python": "3.13.15",
+    "cpu_count": 2,
+    "torch": "2.11.0+cu130",
+    "cuda_available": true,
+    "gpu": "Tesla T4",
+    "gpu_total_mem_gb": 15.64,
+    "gpu_capability": "7.5",
+    "bf16_supported": false
+  },
+  "argv": [
+    "scripts/12_build_sft.py",
+    "--max-problems",
+    "40000"
+  ],
+  "script": "scripts/12_build_sft.py",
+  "seed": 1337,
+  "config": {
+    "name": "max-12m",
+    "model": {
+      "vocab_size": 4096,
+      "d_model": 384,
+      "n_layers": 6,
+      "n_heads": 6,
+      "d_ff": 1536,
+      "context_length": 256,
+      "positional": "rope",
+      "norm": "pre_ln",
+      "activation": "gelu",
+      "attn_bias": false,
+      "ffn_bias": true,
+      "tie_embeddings": true,
+      "dropout": 0.0
+    },
+    "init": {
+      "scheme": "normal",
+      "std": 0.02,
+      "scale_residual": true
+    },
+    "expected": {
+      "n_parameters": 12211200,
+      "init_loss": 8.3178,
+      "init_loss_tol": 0.25
+    }
+  },
+  "config_hash": "9941d7d1956f",
+  "tokenizer_fingerprint": "d6080bac0a9a",
+  "context_length": 256,
+  "max_problems": 40000,
+  "splits": {
+    "train": {
+      "problems": 40000,
+      "sequences": 280000,
+      "rows": 93546,
+      "row_length": 256,
+      "tokens_total": 23947776,
+      "tokens_with_loss": 7200877,
+      "loss_fraction": 0.3007,
+      "padding_fraction": 0.1449,
+      "mean_example_tokens": 73.1,
+      "max_example_tokens": 121,
+      "dropped_too_long": 0,
+      "by_role": {
+        "<|solver|>": 40000,
+        "<|alternative|>": 40000,
+        "<|critic|>": 80000,
+        "<|verifier|>": 80000,
+        "<|coordinator|>": 40000
+      },
+      "narrative_tokens": 8590795,
+      "unk_rate": 0.0
+    },
+    "val": {
+      "problems": 5864,
+      "sequences": 41048,
+      "rows": 14146,
+      "row_length": 256,
+      "tokens_total": 3621376,
+      "tokens_with_loss": 1207684,
+      "loss_fraction": 0.3335,
+      "padding_fraction": 0.1459,
+      "mean_example_tokens": 75.3,
+      "max_example_tokens": 157,
+      "dropped_too_long": 0,
+      "by_role": {
+        "<|solver|>": 5864,
+        "<|alternative|>": 5864,
+        "<|critic|>": 11728,
+        "<|verifier|>": 11728,
+        "<|coordinator|>": 5864
+      },
+      "narrative_tokens": 472051,
+      "unk_rate": 0.0
+    }
+  }
+}

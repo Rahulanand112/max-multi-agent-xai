@@ -13,7 +13,7 @@ tinystories:
   hf_split: train
   # Number of stories to keep. ~150k stories is roughly the 50M-token target
   # for Config A. Set to null to use the full 2.12M-story split.
-  max_documents: 150000
+  max_documents: 500000
   license: CDLA-Sharing-1.0
   url: https://huggingface.co/datasets/roneneldan/TinyStories
 

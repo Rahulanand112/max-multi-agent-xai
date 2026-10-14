@@ -67,8 +67,8 @@ def load_rng_state(state: dict[str, Any]) -> None:
         import torch
 
         if "torch" in state:
-            torch.set_rng_state(state["torch"])
+            torch.set_rng_state(state["torch"].cpu().to(torch.uint8))
         if "cuda" in state and torch.cuda.is_available():
-            torch.cuda.set_rng_state_all(state["cuda"])
+            torch.cuda.set_rng_state_all([x.cpu().to(torch.uint8) for x in state["cuda"]])
     except ImportError:
         pass

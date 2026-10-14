@@ -168,6 +168,7 @@ def main() -> None:
             source, model=model,
             expected_tokenizer_fingerprint=fingerprint,
             map_location=device,
+            restore_rng=False,
         )
         init_source = str(source)
         log.info("-" * 74)
