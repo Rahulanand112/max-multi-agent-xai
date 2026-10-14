@@ -89,7 +89,7 @@ def main() -> None:
         ckpt = Path(args.checkpoint)
         if ckpt.exists():
             size_mb = ckpt.stat().st_size / 1e6
-            target = ROOT / "checkpoints" / "ckpt_A_final.pt"
+            target = ROOT / "checkpoints" / ckpt.name
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(ckpt, target)
             log.append(("copy", f"{rel(target)}  ({size_mb:.1f} MB)"))

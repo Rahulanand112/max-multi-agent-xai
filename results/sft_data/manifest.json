@@ -1,6 +1,6 @@
 {
-  "created_utc": "2026-10-14T18:10:57+00:00",
-  "git_commit": "29e326a",
+  "created_utc": "2026-10-14T18:41:59+00:00",
+  "git_commit": "ea4a5be",
   "hardware": {
     "platform": "Linux-6.6.122+-x86_64-with-glibc2.39",
     "python": "3.13.15",
@@ -15,7 +15,7 @@
   "argv": [
     "scripts/12_build_sft.py",
     "--max-problems",
-    "40000"
+    "106398"
   ],
   "script": "scripts/12_build_sft.py",
   "seed": 1337,
@@ -50,26 +50,26 @@
   "config_hash": "9941d7d1956f",
   "tokenizer_fingerprint": "d6080bac0a9a",
   "context_length": 256,
-  "max_problems": 40000,
+  "max_problems": 106398,
   "splits": {
     "train": {
-      "problems": 40000,
-      "sequences": 280000,
-      "rows": 93546,
+      "problems": 106398,
+      "sequences": 744786,
+      "rows": 257110,
       "row_length": 256,
-      "tokens_total": 23947776,
-      "tokens_with_loss": 7200877,
-      "loss_fraction": 0.3007,
-      "padding_fraction": 0.1449,
-      "mean_example_tokens": 73.1,
-      "max_example_tokens": 121,
+      "tokens_total": 65820160,
+      "tokens_with_loss": 21956517,
+      "loss_fraction": 0.3336,
+      "padding_fraction": 0.1458,
+      "mean_example_tokens": 75.5,
+      "max_example_tokens": 159,
       "dropped_too_long": 0,
       "by_role": {
-        "<|solver|>": 40000,
-        "<|alternative|>": 40000,
-        "<|critic|>": 80000,
-        "<|verifier|>": 80000,
-        "<|coordinator|>": 40000
+        "<|solver|>": 106398,
+        "<|alternative|>": 106398,
+        "<|critic|>": 212796,
+        "<|verifier|>": 212796,
+        "<|coordinator|>": 106398
       },
       "narrative_tokens": 8590795,
       "unk_rate": 0.0

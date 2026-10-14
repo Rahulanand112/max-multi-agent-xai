@@ -1,6 +1,6 @@
 {
-  "created_utc": "2026-10-14T18:25:08+00:00",
-  "git_commit": "29e326a",
+  "created_utc": "2026-10-14T18:45:26+00:00",
+  "git_commit": "ea4a5be",
   "hardware": {
     "platform": "Linux-6.6.122+-x86_64-with-glibc2.39",
     "python": "3.13.15",
@@ -16,6 +16,8 @@
     "scripts/13_train_b.py",
     "--stage",
     "sft",
+    "--max-steps",
+    "1500",
     "--init-from",
     "/content/drive/MyDrive/max_v0/checkpoints/ckpt_B_final.pt",
     "--checkpoint-dir",
@@ -40,7 +42,7 @@
       "attn_bias": false,
       "ffn_bias": true,
       "tie_embeddings": true,
-      "dropout": 0.0
+      "dropout": 0.1
     },
     "init": {
       "scheme": "normal",
@@ -77,12 +79,12 @@
     "train": {
       "batch_size": 32,
       "grad_accum_steps": 1,
-      "max_steps": 4000,
+      "max_steps": 1500,
       "precision": "fp16",
       "compile": false
     },
     "eval": {
-      "every_steps": 250,
+      "every_steps": 100,
       "batches": 30
     },
     "checkpoint": {
@@ -98,30 +100,30 @@
       "tensorboard": false
     }
   },
-  "config_hash": "68c6131ad002",
+  "config_hash": "29aa0671902e",
   "tokenizer_fingerprint": "d6080bac0a9a",
   "tokenizer_vocab_size": 4096,
   "dataset": {
     "kind": "sft",
-    "rows": 93546,
-    "supervised_tokens": 7200877,
-    "supervision_fraction": 0.3007
+    "rows": 257110,
+    "supervised_tokens": 21956517,
+    "supervision_fraction": 0.3336
   },
   "n_parameters": 12211200,
-  "step0_loss": 6.448029,
+  "step0_loss": 6.208432,
   "expected_step0_loss": 8.317766,
   "initialised_from": "/content/drive/MyDrive/max_v0/checkpoints/ckpt_B_final.pt",
   "resumed_from_step": null,
   "results": {
-    "steps": 4000,
-    "tokens_seen": 32768000,
-    "final_train_loss": 0.003084,
-    "best_val_loss": 1.166316,
-    "elapsed_seconds": 430.57,
-    "tokens_per_second": 76103.2,
-    "val_loss": 4.075539,
-    "val_perplexity": 58.882229,
-    "peak_vram_gb": 2.032
+    "steps": 1500,
+    "tokens_seen": 12288000,
+    "final_train_loss": 0.020575,
+    "best_val_loss": 0.011238,
+    "elapsed_seconds": 199.77,
+    "tokens_per_second": 61511.8,
+    "val_loss": 0.011238,
+    "val_perplexity": 1.011301,
+    "peak_vram_gb": 2.15
   },
   "checkpoint_dir": "/content/drive/MyDrive/max_v0/checkpoints"
 }

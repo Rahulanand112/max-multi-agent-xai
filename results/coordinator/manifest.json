@@ -1,0 +1,131 @@
+{
+  "created_utc": "2026-10-14T20:00:30+00:00",
+  "git_commit": "ea4a5be",
+  "hardware": {
+    "platform": "Linux-6.6.122+-x86_64-with-glibc2.39",
+    "python": "3.13.15",
+    "cpu_count": 2,
+    "torch": "2.11.0+cu130",
+    "cuda_available": true,
+    "gpu": "Tesla T4",
+    "gpu_total_mem_gb": 15.64,
+    "gpu_capability": "7.5",
+    "bf16_supported": false
+  },
+  "argv": [
+    "scripts/15_train_coordinator.py",
+    "--bundles",
+    "experiments/agents/bundles_val.pt",
+    "--epochs",
+    "15"
+  ],
+  "script": "scripts/15_train_coordinator.py",
+  "trained": true,
+  "seed": 1337,
+  "bundles": "/content/max/experiments/agents/bundles_val.pt",
+  "n_bundles": 1200,
+  "coordinator_parameters": 117249,
+  "hidden_dim": 768,
+  "width": 128,
+  "lr": 0.001,
+  "epochs": 15,
+  "calibration_weight": 0.3,
+  "holdout_accuracy": 0.965517,
+  "history": [
+    {
+      "epoch": 1,
+      "loss": 0.348168,
+      "train_accuracy": 0.927536,
+      "holdout_accuracy": 0.954023
+    },
+    {
+      "epoch": 2,
+      "loss": 0.307306,
+      "train_accuracy": 0.927536,
+      "holdout_accuracy": 0.954023
+    },
+    {
+      "epoch": 3,
+      "loss": 0.245844,
+      "train_accuracy": 0.947826,
+      "holdout_accuracy": 0.954023
+    },
+    {
+      "epoch": 4,
+      "loss": 0.225,
+      "train_accuracy": 0.956522,
+      "holdout_accuracy": 0.954023
+    },
+    {
+      "epoch": 5,
+      "loss": 0.245788,
+      "train_accuracy": 0.956522,
+      "holdout_accuracy": 0.954023
+    },
+    {
+      "epoch": 6,
+      "loss": 0.271847,
+      "train_accuracy": 0.953623,
+      "holdout_accuracy": 0.954023
+    },
+    {
+      "epoch": 7,
+      "loss": 0.219055,
+      "train_accuracy": 0.95942,
+      "holdout_accuracy": 0.954023
+    },
+    {
+      "epoch": 8,
+      "loss": 0.262656,
+      "train_accuracy": 0.962319,
+      "holdout_accuracy": 0.954023
+    },
+    {
+      "epoch": 9,
+      "loss": 0.223395,
+      "train_accuracy": 0.962319,
+      "holdout_accuracy": 0.954023
+    },
+    {
+      "epoch": 10,
+      "loss": 0.1889,
+      "train_accuracy": 0.968116,
+      "holdout_accuracy": 0.954023
+    },
+    {
+      "epoch": 11,
+      "loss": 0.200639,
+      "train_accuracy": 0.956522,
+      "holdout_accuracy": 0.954023
+    },
+    {
+      "epoch": 12,
+      "loss": 0.208918,
+      "train_accuracy": 0.965217,
+      "holdout_accuracy": 0.965517
+    },
+    {
+      "epoch": 13,
+      "loss": 0.205798,
+      "train_accuracy": 0.968116,
+      "holdout_accuracy": 0.954023
+    },
+    {
+      "epoch": 14,
+      "loss": 0.202259,
+      "train_accuracy": 0.971014,
+      "holdout_accuracy": 0.954023
+    },
+    {
+      "epoch": 15,
+      "loss": 0.236825,
+      "train_accuracy": 0.968116,
+      "holdout_accuracy": 0.954023
+    }
+  ],
+  "language_model_frozen": true,
+  "usable": 432,
+  "skipped_unanimous": 663,
+  "skipped_no_correct_candidate": 105,
+  "skipped_ambiguous": 0
+}

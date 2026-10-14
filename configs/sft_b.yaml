@@ -38,7 +38,7 @@ train:
   compile: false
 
 eval:
-  every_steps: 250
+  every_steps: 100
   batches: 30
 
 checkpoint:
@@ -52,3 +52,6 @@ logging:
   experiments_dir: experiments
   log_every_steps: 25
   tensorboard: false
+
+model:
+  dropout: 0.1

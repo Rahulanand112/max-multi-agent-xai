@@ -1,0 +1,221 @@
+==========================================================================
+MAX DECISION RECORD
+==========================================================================
+
+QUESTION        Jonah has 3 buttons and loses 2. How many buttons are left?
+GROUND TRUTH    1
+
+--------------------------------------------------------------------------
+AGENTS      one checkpoint, five role tokens, zero extra weights
+--------------------------------------------------------------------------
+  agent        answer           conf  stated   schema     T
+  solver       5              0.9454    0.95       ok   0.0
+  alternative  7              0.9351    0.95       ok   0.9
+  critic       -              0.9476    0.90       ok   0.7
+  verifier     -              0.9857    0.90       ok   0.0
+  coordinator  7              0.9966    0.95       ok   0.0
+
+  self-consistency draws: 5, 5, 5, 7
+
+CRITIC          objected
+VERIFIER        verdict: incorrect
+DISAGREEMENT    yes   candidates: 5, 7, 7
+FORMAT COMPLY   100% of agent outputs matched the schema
+GENERATIONS     5 protocol + 4 self-consistency
+
+--------------------------------------------------------------------------
+AGGREGATION     every method scored on these same generations
+--------------------------------------------------------------------------
+  method                  answer           conf  correct   gen
+  M1_single               5              0.9454       no     1
+  M2_self_consistency     5              0.7500       no     4
+  M3_majority             7              0.6667       no     5
+  M4_confidence_weighted  7              0.8034       no     5
+  M5_neural_fusion        7              0.6291       no     5
+
+==========================================================================
+
+==========================================================================
+MAX DECISION RECORD
+==========================================================================
+
+QUESTION        Ivy has 9 marbles and is given 12 more. How many marbles does Ivy have now?
+GROUND TRUTH    21
+
+--------------------------------------------------------------------------
+AGENTS      one checkpoint, five role tokens, zero extra weights
+--------------------------------------------------------------------------
+  agent        answer           conf  stated   schema     T
+  solver       21             0.9436    0.95       ok   0.0
+  alternative  21             0.8974    0.95       ok   0.9
+  critic       -              0.9051    0.90       ok   0.7
+  verifier     -              0.7730    0.90       ok   0.0
+  coordinator  21             0.9978    0.95       ok   0.0
+
+  self-consistency draws: 25, 33, 25, 25
+
+CRITIC          objected
+VERIFIER        verdict: incorrect
+DISAGREEMENT    no   candidates: 21, 21, 21
+FORMAT COMPLY   100% of agent outputs matched the schema
+GENERATIONS     5 protocol + 4 self-consistency
+
+--------------------------------------------------------------------------
+AGGREGATION     every method scored on these same generations
+--------------------------------------------------------------------------
+  method                  answer           conf  correct   gen
+  M1_single               21             0.9436      yes     1
+  M2_self_consistency     25             0.7500       no     4
+  M3_majority             21             1.0000      yes     5
+  M4_confidence_weighted  21             1.0000      yes     5
+  M5_neural_fusion        21             1.0000      yes     5
+
+==========================================================================
+
+==========================================================================
+MAX DECISION RECORD
+==========================================================================
+
+QUESTION        Zoe has 4 baskets. Each basket holds 9 cookies. Zoe gives away 21 cookies. How many cookies does Zoe have left?
+GROUND TRUTH    15
+
+--------------------------------------------------------------------------
+AGENTS      one checkpoint, five role tokens, zero extra weights
+--------------------------------------------------------------------------
+  agent        answer           conf  stated   schema     T
+  solver       15             0.9708    0.87       ok   0.0
+  alternative  14             0.8667    0.87       ok   0.9
+  critic       -              0.9435    0.90       ok   0.7
+  verifier     -              0.5512    0.90  partial   0.0
+  coordinator  14             0.9966    0.87       ok   0.0
+
+  self-consistency draws: 5, 15, 5, 35
+
+CRITIC          objected
+VERIFIER        verdict: (unparsed)
+DISAGREEMENT    yes   candidates: 15, 14, 14
+FORMAT COMPLY   80% of agent outputs matched the schema
+GENERATIONS     5 protocol + 4 self-consistency
+
+--------------------------------------------------------------------------
+AGGREGATION     every method scored on these same generations
+--------------------------------------------------------------------------
+  method                  answer           conf  correct   gen
+  M1_single               15             0.9708      yes     1
+  M2_self_consistency     5              0.5000       no     4
+  M3_majority             14             0.6667       no     5
+  M4_confidence_weighted  14             0.6575       no     5
+  M5_neural_fusion        15             0.9992      yes     5
+
+==========================================================================
+
+==========================================================================
+MAX DECISION RECORD
+==========================================================================
+
+QUESTION        Ruby has 6 trays with 5 apples in each. Ruby finds 9 more apples, then 3 of them break. The rest are shared equally into 2 piles. How many apples are in each pile?
+GROUND TRUTH    18
+
+--------------------------------------------------------------------------
+AGENTS      one checkpoint, five role tokens, zero extra weights
+--------------------------------------------------------------------------
+  agent        answer           conf  stated   schema     T
+  solver       19             0.9816    0.71       ok   0.0
+  alternative  13             0.9504    0.71       ok   0.9
+  critic       -              0.9276    0.90       ok   0.7
+  verifier     2              0.6672    0.71  partial   0.0
+  coordinator  13             0.9988    0.71       ok   0.0
+
+  self-consistency draws: 19, 19, 19, 19
+
+CRITIC          objected
+VERIFIER        verdict: (unparsed)
+DISAGREEMENT    yes   candidates: 19, 13, 13
+FORMAT COMPLY   80% of agent outputs matched the schema
+GENERATIONS     5 protocol + 4 self-consistency
+
+--------------------------------------------------------------------------
+AGGREGATION     every method scored on these same generations
+--------------------------------------------------------------------------
+  method                  answer           conf  correct   gen
+  M1_single               19             0.9816       no     1
+  M2_self_consistency     19             1.0000       no     4
+  M3_majority             13             0.6667       no     5
+  M4_confidence_weighted  13             0.6651       no     5
+  M5_neural_fusion        19             0.9867       no     5
+
+==========================================================================
+
+==========================================================================
+MAX DECISION RECORD
+==========================================================================
+
+QUESTION        Max collects 2 apples and Theo collects 4 apples. They share all of them equally between 2 children. How many apples does each child get?
+GROUND TRUTH    3
+
+--------------------------------------------------------------------------
+AGENTS      one checkpoint, five role tokens, zero extra weights
+--------------------------------------------------------------------------
+  agent        answer           conf  stated   schema     T
+  solver       3              0.9987    0.87       ok   0.0
+  alternative  2              0.9909    0.87       ok   0.9
+  critic       -              0.9818    0.87       ok   0.7
+  verifier     -              0.9283    0.87       ok   0.0
+  coordinator  3              0.9659    0.87       ok   0.0
+
+  self-consistency draws: 3, 3, 3, 3
+
+CRITIC          found no error
+VERIFIER        verdict: correct
+DISAGREEMENT    yes   candidates: 3, 2, 3
+FORMAT COMPLY   100% of agent outputs matched the schema
+GENERATIONS     5 protocol + 4 self-consistency
+
+--------------------------------------------------------------------------
+AGGREGATION     every method scored on these same generations
+--------------------------------------------------------------------------
+  method                  answer           conf  correct   gen
+  M1_single               3              0.9987      yes     1
+  M2_self_consistency     3              1.0000      yes     4
+  M3_majority             3              0.6667      yes     5
+  M4_confidence_weighted  3              0.6647      yes     5
+  M5_neural_fusion        3              0.9659      yes     5
+
+==========================================================================
+
+==========================================================================
+MAX DECISION RECORD
+==========================================================================
+
+QUESTION        Finn has 12 cards and is given 8 more. How many cards does Finn have now?
+GROUND TRUTH    20
+
+--------------------------------------------------------------------------
+AGENTS      one checkpoint, five role tokens, zero extra weights
+--------------------------------------------------------------------------
+  agent        answer           conf  stated   schema     T
+  solver       20             0.9991    0.95       ok   0.0
+  alternative  20             0.9986    0.95       ok   0.9
+  critic       -              0.9942    0.90       ok   0.7
+  verifier     20             0.8263    0.95  partial   0.0
+  coordinator  20             0.9982    0.95       ok   0.0
+
+  self-consistency draws: 20, 20, 20, 20
+
+CRITIC          objected
+VERIFIER        verdict: (unparsed)
+DISAGREEMENT    no   candidates: 20, 20, 20
+FORMAT COMPLY   80% of agent outputs matched the schema
+GENERATIONS     5 protocol + 4 self-consistency
+
+--------------------------------------------------------------------------
+AGGREGATION     every method scored on these same generations
+--------------------------------------------------------------------------
+  method                  answer           conf  correct   gen
+  M1_single               20             0.9991      yes     1
+  M2_self_consistency     20             1.0000      yes     4
+  M3_majority             20             1.0000      yes     5
+  M4_confidence_weighted  20             1.0000      yes     5
+  M5_neural_fusion        20             1.0000      yes     5
+
+==========================================================================

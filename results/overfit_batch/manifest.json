@@ -1,0 +1,38 @@
+{
+  "created_utc": "2026-10-14T18:40:49+00:00",
+  "git_commit": "ea4a5be",
+  "hardware": {
+    "platform": "Linux-6.6.122+-x86_64-with-glibc2.39",
+    "python": "3.13.15",
+    "cpu_count": 2,
+    "torch": "2.11.0+cu130",
+    "cuda_available": true,
+    "gpu": "Tesla T4",
+    "gpu_total_mem_gb": 15.64,
+    "gpu_capability": "7.5",
+    "bf16_supported": false
+  },
+  "argv": [
+    "scripts/05_overfit_batch.py",
+    "--config",
+    "configs/train_b.yaml"
+  ],
+  "stage": "overfit_one_batch",
+  "device": "cuda",
+  "seed": 1337,
+  "sequences": 8,
+  "context_length": 256,
+  "target_tokens": 2048,
+  "lr": 0.003,
+  "threshold": 0.1,
+  "config_hash": "7a65ff7f32ac",
+  "results": {
+    "first_loss": 8.328945,
+    "final_loss": 0.08637,
+    "steps_run": 97,
+    "reached_threshold_at_step": 96,
+    "elapsed_seconds": 3.26,
+    "targets_shifted_correctly": true
+  },
+  "passed": true
+}
