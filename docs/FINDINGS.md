@@ -167,13 +167,47 @@ step.
 
 ---
 
+## 7 · The results collector overwrote Review 1's checkpoint
+
+```python
+target = ROOT / "checkpoints" / "ckpt_A_final.pt"      # hardcoded
+shutil.copy2(ckpt, target)
+```
+
+`scripts/10_collect_results.py` was written when the project had exactly one
+checkpoint, so it hardcoded the destination name. Passed the Config B weights
+export, it wrote them over Review 1's 1.33M-parameter model — same path, no
+error, copy succeeded.
+
+The only symptom was a file size in a log:
+
+```
+47M  checkpoints/ckpt_B_sft_weights.pt
+47M  checkpoints/ckpt_A_final.pt        <- was 16M
+```
+
+Committing that would have destroyed a Review 1 artefact and put the wrong
+model behind the README's link to it, under a name that says it is the other
+one. It was caught in the staging listing, one step before the push.
+
+**Fix.** `target = ROOT / "checkpoints" / ckpt.name` — the destination is now
+the source file's own name, so two checkpoints cannot collide. The clobbered
+file was restored from git before committing.
+
+The general lesson is the one this project keeps relearning: a hardcoded name
+that was correct when there was one of something is a bug the moment there are
+two, and it fails by succeeding.
+
+---
+
 ## The common thread
 
-Four of these were a silent subtraction: a marker stripped, a field not
-credited, a prompt section missing, a key dropped. The fifth raised loudly but
-hid on a path only reached after something else had already gone wrong. The
-sixth did not look like a bug at all — a training loss of 0.003 looks like
-success until you read it next to the validation curve. None produced a traceback and
+Five of these were a silent subtraction: a marker stripped, a field not
+credited, a prompt section missing, a key dropped, a file overwritten by a
+successful copy. One raised loudly but hid on a path only reached after
+something else had already gone wrong. One did not look like a bug at all — a
+training loss of 0.003 looks like success until you read it next to the
+validation curve. None produced a traceback and
 none would have failed a loss curve inspection — the Stage 2 training loss fell
 to 0.03 with bugs 2 and 3 both live.
 
